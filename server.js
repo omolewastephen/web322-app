@@ -102,9 +102,6 @@ app.get('/images/add', (req, res) => {
     res.sendFile(path.join(__dirname + '/views/addImage.html'));
 })
 
-app.get("", (req, res) => {
-    res.sendFile(path.join(__dirname + '/views/404.html'));
-});
 
 app.post('/images/add', upload.single("imageFile"), (req, res) => {
     res.redirect('/images');
@@ -126,6 +123,12 @@ app.post('/employees/add', (req, res) => {
         res.json(err);
     });
 });
+
+app.use(function(req, res) {
+    res.status(400);
+    res.sendFile(path.join(__dirname + '/views/404.html'));
+});
+
 
 dataService.initialize().then(function() {
     app.listen(HTTP_PORT, () => console.log('Express http server listening on port ' + HTTP_PORT));
