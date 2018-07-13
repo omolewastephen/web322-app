@@ -16,8 +16,30 @@ var path = require("path");
 var multer = require('multer');
 var fs = require('fs');
 var bodyParser = require('body-parser');
+const exphbs = require('express-handlebars');
+
+app.engine('.hbs', exphbs({
+    extname: '.hbs',
+    // helpers: {
+    //     strong: function(options) {
+    //         return '<strong>' + options.fn(this) + '</strong>';
+    //     },
+    //     list: function(context, options) {
+    //         var ret = "<ul>";
+
+    //         for (var i = 0; i < context.length; i++) {
+    //             ret = ret + "<li>" + options.fn(context[i]) + "</li>";
+    //         }
+
+    //         return ret + "</ul>";
+    //     }
+    // },
+    defaultLayout: 'main'
+}));
+app.set('view engine', '.hbs');
 
 const dataService = require('./data-service.js');
+
 const storage = multer.diskStorage({
     destination: "./public/images/uploaded",
     filename: function(req, file, cb) {
@@ -34,11 +56,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname + '/views/home.html'));
+    res.render('home');
 });
 
 app.get("/about", (req, res) => {
-    res.sendFile(path.join(__dirname + '/views/about.html'));
+    res.render("about");
 });
 
 app.get("/managers", (req, res) => {
@@ -86,7 +108,7 @@ app.get("/employees", (req, res) => {
 });
 
 app.get('/employees/add', (req, res) => {
-    res.sendFile(path.join(__dirname + '/views/addEmployee.html'));
+    res.render('addEmployee');
 });
 
 app.get('/employees/:value', (req, res) => {
@@ -99,8 +121,8 @@ app.get('/employees/:value', (req, res) => {
 });
 
 app.get('/images/add', (req, res) => {
-    res.sendFile(path.join(__dirname + '/views/addImage.html'));
-})
+    res.render("addImage");
+});
 
 
 app.post('/images/add', upload.single("imageFile"), (req, res) => {
@@ -126,7 +148,7 @@ app.post('/employees/add', (req, res) => {
 
 app.use(function(req, res) {
     res.status(400);
-    res.sendFile(path.join(__dirname + '/views/404.html'));
+    res.render('404');
 });
 
 
