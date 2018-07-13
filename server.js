@@ -20,23 +20,30 @@ const exphbs = require('express-handlebars');
 
 app.engine('.hbs', exphbs({
     extname: '.hbs',
-    // helpers: {
-    //     strong: function(options) {
-    //         return '<strong>' + options.fn(this) + '</strong>';
-    //     },
-    //     list: function(context, options) {
-    //         var ret = "<ul>";
-
-    //         for (var i = 0; i < context.length; i++) {
-    //             ret = ret + "<li>" + options.fn(context[i]) + "</li>";
-    //         }
-
-    //         return ret + "</ul>";
-    //     }
-    // },
-    defaultLayout: 'main'
+    helpers: {
+        navLink: function(url, options) {
+            return '<li' +
+                ((url == app.locals.activeRoute) ? ' class="active" ' : '') + '><a href="' + url + '">' + options.fn(this) + '</a></li>';
+        },
+        equal: function(lvalue, rvalue, options) {
+            if (arguments.length < 3)
+                throw new Error("Handlebars Helper equal needs 2 parameters");
+            if (lvalue != rvalue) {
+                return options.inverse(this);
+            } else {
+                return options.fn(this);
+            }
+        },
+        defaultLayout: 'main'
+    }
 }));
+
 app.set('view engine', '.hbs');
+app.use(function(req, res, next) {
+    let route = req.baseUrl + req.path;
+    app.locals.activeRoute = (route == "/") ? "/" : route.replace(/\/$/, "");
+    next();
+});
 
 const dataService = require('./data-service.js');
 

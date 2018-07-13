@@ -30,15 +30,14 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="/">Home</a></li>
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/employees/add">Add Employee</a></li>
-                    <li><a href="/images/add">Add Image</a></li>
+                   {{#navLink "/"}}Home{{/navLink}}
+                   {{#navLink "/about"}}About{{/navLink}}
+                   {{#navLink "/employees/add"}}Add Employee{{/navLink}}
+                   {{#navLink "/images/add"}}Add Image{{/navLink}}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/images">Images</a></li>
                     <li><a href="/employees">Employees</a></li>
-                    <li><a href="/managers">Managers</a></li>
                     <li><a href="/departments">Departments</a></li>
                 </ul>
             </div>
