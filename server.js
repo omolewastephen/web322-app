@@ -17,6 +17,7 @@ var multer = require('multer');
 var fs = require('fs');
 var bodyParser = require('body-parser');
 const exphbs = require('express-handlebars');
+const dataService = require('./data-service.js');
 
 app.engine('.hbs', exphbs({
     extname: '.hbs',
@@ -39,13 +40,7 @@ app.engine('.hbs', exphbs({
 }));
 
 app.set('view engine', '.hbs');
-app.use(function(req, res, next) {
-    let route = req.baseUrl + req.path;
-    app.locals.activeRoute = (route == "/") ? "/" : route.replace(/\/$/, "");
-    next();
-});
 
-const dataService = require('./data-service.js');
 
 const storage = multer.diskStorage({
     destination: "./public/images/uploaded",
@@ -57,17 +52,24 @@ const upload = multer({ storage: storage });
 
 
 
-app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(function(req, res, next) {
+    let route = req.baseUrl + req.path;
+    app.locals.activeRoute = (route == "/") ? "/" : route.replace(/\/$/, "");
+    next();
+});
+
+app.use(express.static('public'));
 
 
 
 app.get("/", (req, res) => {
-    res.render('home');
+    res.render('home', { layout: 'main' });
 });
 
 app.get("/about", (req, res) => {
-    res.render("about");
+    res.render("about", { layout: 'main' });
 });
 
 app.get("/managers", (req, res) => {
@@ -97,25 +99,33 @@ app.get("/departments", (req, res) => {
 app.get("/employees", (req, res) => {
     if (req.query.department) {
         return dataService.getEmployeesByDepartment(req.query.department).then(
-            data => res.json(data)
-        );
+            data => res.render("employees", { layout: 'main', employees: data })
+        ).catch(() => {
+            res.render("employess", { layout: 'main', message: 'no result' })
+        });
     } else if (req.query.status) {
         return dataService.getEmployeesByStatus(req.query.status).then(
-            data => res.json(data)
-        );
+            data => res.render("employees", { layout: 'main', employees: data })
+        ).catch(() => {
+            res.render("employess", { layout: 'main', message: 'no result' })
+        });
     } else if (req.query.manager) {
         return dataService.getEmployeesByManager(req.query.manager).then(
-            data => res.json(data)
-        );
+            data => res.render("employees", { layout: 'main', employees: data })
+        ).catch(() => {
+            res.render("employess", { layout: 'main', message: 'no result' })
+        });
     } else {
         return dataService.getAllEmployees().then(
-            data => res.json(data)
-        );
+            data => res.render("employees", { layout: 'main', employees: data })
+        ).catch(() => {
+            res.render("employess", { layout: 'main', message: 'no result' })
+        });
     }
 });
 
 app.get('/employees/add', (req, res) => {
-    res.render('addEmployee');
+    res.render('addEmployee', { layout: 'main' });
 });
 
 app.get('/employees/:value', (req, res) => {
@@ -128,7 +138,7 @@ app.get('/employees/:value', (req, res) => {
 });
 
 app.get('/images/add', (req, res) => {
-    res.render("addImage");
+    res.render("addImage", { layout: 'main' });
 });
 
 
@@ -141,7 +151,7 @@ app.get("/images", (req, res) => {
     var images = "";
     fs.readdir(path, function(err, items) {
         images = items;
-        res.json({ images });
+        res.render("images", { layout: 'main', images: images });
     });
 });
 
@@ -155,7 +165,7 @@ app.post('/employees/add', (req, res) => {
 
 app.use(function(req, res) {
     res.status(400);
-    res.render('404');
+    res.render('404', { layout: 'main' });
 });
 
 
