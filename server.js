@@ -89,10 +89,10 @@ app.get("/managers", (req, res) => {
 
 app.get("/departments", (req, res) => {
     dataService.getDepartments().then(function(data) {
-        res.json(data);
+        res.render('departments', { layout: 'main', departments: data });
     }).catch(function(err) {
-        var error = { "message": err };
-        res.json(error);
+        // var error = { "message": err };
+        res.render('departments', { layout: 'main', message: 'no result' });
     });
 });
 
@@ -128,12 +128,12 @@ app.get('/employees/add', (req, res) => {
     res.render('addEmployee', { layout: 'main' });
 });
 
-app.get('/employees/:value', (req, res) => {
+app.get('/employee/:value', (req, res) => {
     var num = req.params.value;
     dataService.getEmployeeByNum(num).then(function(data) {
-        res.json(data);
+        res.render("employee", { layout: 'main', employee: data });
     }).catch(function(err) {
-        console.log(err);
+        res.render("employee", { layout: 'main', message: "no results" });
     });
 });
 
