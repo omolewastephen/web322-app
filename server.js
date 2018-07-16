@@ -137,6 +137,14 @@ app.get('/employee/:value', (req, res) => {
     });
 });
 
+app.post('/employee/update', (req, res) => {
+    dataService.updateEmployee(req.body).then(function(data) {
+        res.redirect("/employees");
+    }).catch((err) => {
+        console.log(err);
+    });
+});
+
 app.get('/images/add', (req, res) => {
     res.render("addImage", { layout: 'main' });
 });

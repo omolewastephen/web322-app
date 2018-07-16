@@ -148,6 +148,23 @@ function getEmployeeByNum(num) {
     });
 }
 
+function updateEmployee(employeeData) {
+    return new Promise((resolve, reject) => {
+        try {
+            const newData = [];
+            for (const employee of employees) {
+                if (employee.employeeNum == employeeData.employeeNum) {
+                    Object.assign(employee, employeeData);
+                    resolve();
+                    break;
+                }
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
 module.exports = {
     getDepartments: getDepartments,
     getManagers: getManagers,
@@ -157,5 +174,6 @@ module.exports = {
     getEmployeesByStatus: getEmployeesByStatus,
     getEmployeeByNum: getEmployeeByNum,
     getEmployeesByManager: getEmployeesByManager,
-    getEmployeesByDepartment: getEmployeesByDepartment
+    getEmployeesByDepartment: getEmployeesByDepartment,
+    updateEmployee: updateEmployee
 }
