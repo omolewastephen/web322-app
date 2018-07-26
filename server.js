@@ -185,6 +185,7 @@ app.get('/department/:value', (req, res) => {
             res.status(404).send("Department Not Found");
         } else {
             res.render("department", { layout: 'main', department: data });
+            console.log(data);
         }
 
     }).catch(function(err) {
@@ -202,7 +203,9 @@ app.post('/employee/update', (req, res) => {
 });
 
 app.post('/department/update', (req, res) => {
+    console.log(req.body);
     dataService.updateDepartment(req.body).then(function(data) {
+        console.log(req.body);
         res.redirect("/departments");
     }).catch((err) => {
         console.log(err);
@@ -239,7 +242,7 @@ app.post('/departments/add', (req, res) => {
     dataService.addDepartment(req.body).then(function() {
         res.redirect('/departments');
     }).catch(function(err) {
-        res.json(err);
+        res.status(500).send(err);
     });
 });
 

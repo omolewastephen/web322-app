@@ -29,7 +29,9 @@ var Employee = sequelize.define('Employee', {
     status: Sequelize.STRING,
     department: Sequelize.INTEGER,
     hireDate: Sequelize.STRING
-
+}, {
+    createdAt: false,
+    updatedAt: false
 });
 
 var Department = sequelize.define('Department', {
@@ -39,6 +41,9 @@ var Department = sequelize.define('Department', {
         autoIncrement: true
     },
     departmentName: Sequelize.STRING
+}, {
+    createdAt: false, // disable createdAt
+    updatedAt: false // disable updatedAt
 });
 
 function initialize() {
@@ -111,8 +116,8 @@ function addDepartment(departmentData) {
         };
         Department.create(departmentData).then(() => {
             resolve();
-        }).catch(() => {
-            reject("unable to create department");
+        }).catch((err) => {
+            reject(err);
         })
 
     });
@@ -181,7 +186,7 @@ function getDepartmentById(id) {
                 departmentId: id
             }
         }).then((data) => {
-            resolve(data);
+            resolve(data[0]);
         }).catch(() => {
             reject("No result returned");
         });
@@ -196,14 +201,14 @@ function updateEmployee(employeeData) {
                 employeeData[prop] = null;
             }
         };
-        Employee.update(employeeData, {
+        Employee.update({ employeeData }, {
             where: {
                 employeeNum: employeeData.employeeNum
             }
         }).then(() => {
             resolve();
-        }).catch(() => {
-            reject("unable to update employee");
+        }).catch((err) => {
+            reject(err);
         })
     });
 }
@@ -215,13 +220,13 @@ function updateDepartment(departmentData) {
                 departmentData[prop] = null;
             }
         };
-        Employee.update(departmentData, {
+        Department.update(departmentData, {
             where: {
                 departmentId: departmentData.departmentId
             }
         }).then(() => {
             resolve();
-        }).catch(() => {
+        }).catch((err) => {
             reject("unable to update employee");
         })
     });
