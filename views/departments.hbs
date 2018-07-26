@@ -15,12 +15,15 @@
         <tbody>
             {{#each departments}}
             <tr>
-                <td>{{departmentId}}</td>
+                <td><a href="/employees?department={{departmentId}}">{{departmentId}}</a></td>
                <td><a href="/department/{{departmentId}}">{{departmentName}}</a></td>
             </tr>
             {{/each}}
         </tbody>
     </table>
 </div>
+</div>
+<div class="col-md-12 text-center">
+<strong>{{message}}</strong>
 </div>
 </div>

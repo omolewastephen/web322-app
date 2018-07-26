@@ -99,7 +99,6 @@ app.get("/departments", (req, res) => {
         }
 
     }).catch(function(err) {
-        // var error = { "message": err };
         res.render('departments', { layout: 'main', message: 'no result' });
     });
 });
@@ -111,19 +110,37 @@ app.get("/departments/add", (req, res) => {
 app.get("/employees", (req, res) => {
     if (req.query.department) {
         return dataService.getEmployeesByDepartment(req.query.department).then(
-            data => res.render("employees", { layout: 'main', employees: data })
+            function(data) {
+                if (data.length > 0) {
+                    res.render("employees", { layout: 'main', employees: data })
+                } else {
+                    res.render("employees", { layout: 'main', message: 'no result' })
+                }
+            }
         ).catch(() => {
             res.render("employees", { layout: 'main', message: 'no result' })
         });
     } else if (req.query.status) {
         return dataService.getEmployeesByStatus(req.query.status).then(
-            data => res.render("employees", { layout: 'main', employees: data })
+            function(data) {
+                if (data.length > 0) {
+                    res.render("employees", { layout: 'main', employees: data })
+                } else {
+                    res.render("employees", { layout: 'main', message: 'no result' })
+                }
+            }
         ).catch(() => {
             res.render("employees", { layout: 'main', message: 'no result' })
         });
     } else if (req.query.manager) {
         return dataService.getEmployeesByManager(req.query.manager).then(
-            data => res.render("employees", { layout: 'main', employees: data })
+            function(data) {
+                if (data.length > 0) {
+                    res.render("employees", { layout: 'main', employees: data })
+                } else {
+                    res.render("employees", { layout: 'main', message: 'no result' })
+                }
+            }
         ).catch(() => {
             res.render("employees", { layout: 'main', message: 'no result' })
         });
@@ -196,7 +213,8 @@ app.get('/department/:value', (req, res) => {
 });
 
 app.post('/employee/update', (req, res) => {
-    dataService.updateEmployee(req.body).then(function(data) {
+    console.log(req.body);
+    dataService.updateEmployee(req.body).then(function() {
         res.redirect("/employees");
     }).catch((err) => {
         console.log(err);
@@ -204,9 +222,7 @@ app.post('/employee/update', (req, res) => {
 });
 
 app.post('/department/update', (req, res) => {
-    console.log(req.body);
     dataService.updateDepartment(req.body).then(function(data) {
-        console.log(req.body);
         res.redirect("/departments");
     }).catch((err) => {
         console.log(err);

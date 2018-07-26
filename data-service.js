@@ -48,7 +48,7 @@ var Department = sequelize.define('Department', {
 
 function initialize() {
     return new Promise((resolve, reject) => {
-        sequelize.sync().then(() => {
+        sequelize.sync({ force: true }).then(() => {
             Employee.create().then(function(employee) {
                 resolve();
             }).catch(() => {
@@ -201,14 +201,14 @@ function updateEmployee(employeeData) {
                 employeeData[prop] = null;
             }
         };
-        Employee.update({ employeeData }, {
+        Employee.update(employeeData, {
             where: {
                 employeeNum: employeeData.employeeNum
             }
         }).then(() => {
             resolve();
         }).catch((err) => {
-            reject(err);
+            reject("Unable to update employee" + err);
         })
     });
 }
