@@ -1,5 +1,11 @@
 <div class="row">
 <div class="col-md-12">
+       
+ {{#each viewData}}
+      {{employee.firstName}}
+ {{/each}}
+
+
 <h2>{{viewData.employee.firstName}} {{ viewData.employee.lastName}} - Employee: {{ viewData.employee.employeeNum}}</h2>
 <hr /><form method="post" action="/employee/update">
 <fieldset>
@@ -83,7 +89,7 @@ viewData.employee.lastName}}" />
     <div class="col-md-3">
         <div class="form-group">
             <label>Status:</label><br />
-            {{#equal employee.status "Full Time"}}
+            {{#equal viewData.employee.status "Full Time"}}
             <label  class="checkbox-inline">
                 <input type="radio" id="statusFT" name="status" checked value="{{viewData.employee.status}}" /> Full Time
             </label>
@@ -106,7 +112,7 @@ viewData.employee.lastName}}" />
                 {{#if viewData.departments}}
                     <select class="form-control" name="department" id="department">
                     {{#each viewData.departments}}
-                         <option value="{{departmentId}}" {{#if selected}} selected {{/if}} >{{departmentName}} </option>
+                         <option value="{{departmentId}}" {{#if selected}} selected {{else}} not-selected {{/if}} >{{departmentName}} </option>
                     {{/each}}
                     </select>
                 {{else}}
@@ -119,7 +125,7 @@ viewData.employee.lastName}}" />
     <div class="col-md-12">
         <div class="form-group">
             <label for="hireDate">Hire Date</label>
-            <input class="form-control" id="hireDate" name="hireDate" type="text" value="{{employee.hireDate}}" readonly />
+            <input class="form-control" id="hireDate" name="hireDate" type="text" value="{{viewData.employee.hireDate}}" readonly />
         </div>
     </div>
 </div>

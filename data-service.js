@@ -48,7 +48,7 @@ var Department = sequelize.define('Department', {
 
 function initialize() {
     return new Promise((resolve, reject) => {
-        sequelize.sync({ force: true }).then(() => {
+        sequelize.sync().then(() => {
             Employee.create().then(function(employee) {
                 resolve();
             }).catch(() => {
@@ -172,7 +172,7 @@ function getEmployeeByNum(num) {
                 employeeNum: num
             }
         }).then((data) => {
-            resolve(data);
+            resolve(data[0]);
         }).catch(() => {
             reject("No result returned");
         });

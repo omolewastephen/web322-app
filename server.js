@@ -1,5 +1,5 @@
 /*********************************************************************************
- * WEB322 – Assignment 03
+ * WEB322 – Assignment 05
  * I declare that this assignment is my own work in accordance with Seneca Academic Policy. No part 
  * of this assignment has been copied manually or electronically from any other source 
  * (including 3rd party web sites) or distributed to other students.
@@ -34,6 +34,9 @@ app.engine('.hbs', exphbs({
             } else {
                 return options.fn(this);
             }
+        },
+        toJSON: function(object) {
+            return JSON.stringify(object);
         },
         defaultLayout: 'main'
     }
@@ -148,26 +151,24 @@ app.get('/employees/add', (req, res) => {
 });
 
 app.get('/employee/:value', (req, res) => {
-    var num = req.params.value;
     let viewData = {};
-    dataService.getEmployeeByNum(num).then(function(data) {
+    dataService.getEmployeeByNum(req.params.value).then((data) => {
         if (data) {
             viewData.employee = data;
         } else {
             viewData.employee = null;
         }
-        // res.render("employee", { layout: 'main', employee: data });
-    }).catch(function() {
-        // res.render("employee", { layout: 'main', message: "no results" });
+    }).catch(() => {
         viewData.employee = null;
-    }).then(dataService.getDepartments().then((data) => {
+    }).then(dataService.getDepartments).then((data) => {
         viewData.departments = data;
         for (let i = 0; i < viewData.departments.length; i++) {
             if (viewData.departments[i].departmentId == viewData.employee.department) {
                 viewData.departments[i].selected = true;
             }
         }
-    })).catch(() => {
+    }).catch((err) => {
+        console.log(err);
         viewData.departments = [];
     }).then(() => {
         if (viewData.employee == null) {
